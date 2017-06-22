@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: com.jpmc.gbce.client.Main
+Created-By: Sukumar
+Class-Path: junit-4.8.1.jar mockito-all-1.9.5.jar
+
