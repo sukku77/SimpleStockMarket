@@ -4,12 +4,9 @@ import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +15,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
 
 import com.jpmc.gbce.enums.StockType;
 import com.jpmc.gbce.enums.TradeType;
@@ -56,7 +52,7 @@ public class StockServiceTest {
 	@Test
 	public void testgbceAllShareIndexForSingleTrade() throws Exception {
 				
-		Map<String, Stock> allStocks = getAllStocks();		
+		Map<String, Stock> allStocks = TestUtils.getAllStocks();		
 		when(this.stockEntity.getAllStocks()).thenReturn(allStocks);		
 		when(this.stockEntity.isValidStock(STOCK_SYMBOL_POP)).thenReturn(true);
 		when(this.tradeEntity.getTrades(STOCK_SYMBOL_POP))
@@ -69,7 +65,7 @@ public class StockServiceTest {
 	@Test
 	public void testgbceAllShareIndexToVerifyLatestPriceIfMultipleTradeForSameStock() throws Exception {	
 				
-		Map<String, Stock> allStocks = getAllStocks();		
+		Map<String, Stock> allStocks = TestUtils.getAllStocks();		
 		when(this.stockEntity.getAllStocks()).thenReturn(allStocks);		
 		when(this.stockEntity.isValidStock(STOCK_SYMBOL_POP)).thenReturn(true);
 		when(this.tradeEntity.getTrades(STOCK_SYMBOL_POP))
@@ -81,7 +77,7 @@ public class StockServiceTest {
 
 	@Test
 	public void testgbceAllShareIndexIfMultipleTradeForDifferentStock() throws Exception {					
-		Map<String, Stock> allStocks = getAllStocks();		
+		Map<String, Stock> allStocks = TestUtils.getAllStocks();		
 		when(this.stockEntity.getAllStocks()).thenReturn(allStocks);		
 		when(this.tradeEntity.getTrades(STOCK_SYMBOL_POP))
 				.thenReturn(Arrays.asList(new Trade(TradeType.BUY, 30.0, 3)));		
@@ -127,7 +123,7 @@ public class StockServiceTest {
 	
 	@Test
 	public void testvolumeWeightedAveragePrice() throws Exception{
-		List<Trade> trades = getTrades(STOCK_SYMBOL_POP);
+		List<Trade> trades = TestUtils.getTrades(STOCK_SYMBOL_POP);
 		when(this.stockEntity.isValidStock(STOCK_SYMBOL_POP)).thenReturn(true);
 		when(this.tradeEntity.getTrades(STOCK_SYMBOL_POP)).thenReturn(trades);
 		BigDecimal volumeWeightedAvgPrice = service.volumeWeightedAveragePrice(STOCK_SYMBOL_POP);
@@ -138,7 +134,7 @@ public class StockServiceTest {
 	@Test
 	public void testvolumeWeightedAveragePriceIfNotValidStock() throws Exception{
 		
-		List<Trade> trades = getTrades(STOCK_SYMBOL_POP);
+		List<Trade> trades = TestUtils.getTrades(STOCK_SYMBOL_POP);
 		when(this.stockEntity.isValidStock(STOCK_SYMBOL_POP)).thenReturn(false);
 		when(this.tradeEntity.getTrades(STOCK_SYMBOL_POP)).thenReturn(trades);
 		BigDecimal volumeWeightedAvgPrice = service.volumeWeightedAveragePrice(STOCK_SYMBOL_POP);
@@ -146,21 +142,5 @@ public class StockServiceTest {
 	    verify(this.stockEntity).isValidStock(STOCK_SYMBOL_POP);
 	}
 	
-	private Map<String, Stock> getAllStocks() {
-		Map<String,Stock> stocks = new HashMap<String,Stock>();
-		stocks.put("TEA", new Stock("TEA", StockType.COMMON, 0.0, 0.0, 100.0));
-		stocks.put(STOCK_SYMBOL_POP, new Stock(STOCK_SYMBOL_POP, StockType.COMMON, 8.0, 0.0, 100.0));
-		stocks.put(STOCK_SYMBOL_ALE, new Stock(STOCK_SYMBOL_ALE, StockType.COMMON, 23.0, 0.0, 60.0));
-		stocks.put("GIN", new Stock("GIN", StockType.PREFERRED, 8.0, 0.2, 100.0));
-		stocks.put("JOE", new Stock("JOE", StockType.COMMON, 13.0, 0.0, 250.0));
-		return stocks;		
-	}
 	
-	private List<Trade> getTrades(String stockSymbol) {
-		List<Trade> trades = new ArrayList<Trade>();
-		trades.add(new Trade(TradeType.BUY,20.0,3));
-		trades.add(new Trade(TradeType.SELL,30.0,2));
-		trades.add(new Trade(TradeType.SELL,25.2,5));
-		return trades;		
-	}
 }
