@@ -1,6 +1,7 @@
 package com.jpmc.gbce.modal;
 
 import java.util.Date;
+import java.util.Objects;
 
 import com.jpmc.gbce.enums.TradeType;
 
@@ -78,6 +79,21 @@ public class Trade {
 		return "Trade [tradeType=" + tradeType + ", price=" + price + ", quantity=" + quantity + ", timestamp="
 				+ timestamp + "]";
 	}
-    
-    
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Trade trade = (Trade) o;
+        return Objects.equals(stockSymbol, trade.stockSymbol) &&
+                tradeType == trade.tradeType &&
+                Objects.equals(price, trade.price) &&
+                Objects.equals(quantity, trade.quantity) &&
+                Objects.equals(timestamp, trade.timestamp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(stockSymbol, tradeType, price, quantity, timestamp);
+    }
 }
